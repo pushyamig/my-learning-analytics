@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 
 from django.views.static import serve
+from django.views.generic.base import TemplateView
 
 from django.conf import settings
 from django.conf.urls import include
@@ -46,8 +47,9 @@ urlpatterns = [
         login_required(views.get_files_template), name="view_file_access_within_week"),
 
     # This is the courses catch-all
-    url(r'^courses/(?P<course_id>[0-9]+|)',
-        login_required(views.get_course_template), name="courses"),
+    url(r'^courses/(?P<course_id>[0-9]+|)', login_required(TemplateView.as_view(template_name='courses.html')), name="courses"),
+    url(r'^test/courses/(?P<course_id>[0-9]+|)', login_required(TemplateView.as_view(template_name='frontend/index.html')), name="test"),
+
 
     # Thse URL's are data patterns
     # GET access patterns

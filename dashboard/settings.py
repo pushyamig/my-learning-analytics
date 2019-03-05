@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'pinax.eventlog',
     'rules.apps.AutodiscoverRulesConfig',
+    'webpack_loader'
 ]
 
 # The order of this is important. It says DebugToolbar should be on top but
@@ -128,6 +129,18 @@ TEMPLATES = [
     },
 ]
 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'assets'),
+)
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': 'dist/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+    }
+}
+
 ROOT_URLCONF = 'dashboard.urls'
 
 WSGI_APPLICATION = 'dashboard.wsgi.application'
@@ -152,6 +165,17 @@ DATABASES = {
         'PASSWORD': ENV.get('DATA_WAREHOUSE_PASSWORD', ''),
         'HOST': ENV.get('DATA_WAREHOUSE_HOST', ''),
         'PORT': ENV.get('DATA_WAREHOUSE_PORT', 5432),
+    }
+}
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': 'dist/', # must end with slash
+        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+        'POLL_INTERVAL': 0.1,
+        'TIMEOUT': None,
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
     }
 }
 
