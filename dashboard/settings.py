@@ -141,6 +141,16 @@ WEBPACK_LOADER = {
     }
 }
 
+NPM_FILE_PATTERNS = {
+    'angular': ['angular.js'],
+    'bootstrap': ['dist/css/*'],
+    'd3': ['dist/d3.min.js'],
+    'd3-tip': ['dist/index.js'],
+    'jquery': ['dist/jquery.min.js'],
+    'moment': ['min/moment.min.js'],
+    'underscore': ['underscore-min.js'],
+}
+
 ROOT_URLCONF = 'dashboard.urls'
 
 WSGI_APPLICATION = 'dashboard.wsgi.application'
@@ -165,17 +175,6 @@ DATABASES = {
         'PASSWORD': ENV.get('DATA_WAREHOUSE_PASSWORD', ''),
         'HOST': ENV.get('DATA_WAREHOUSE_HOST', ''),
         'PORT': ENV.get('DATA_WAREHOUSE_PORT', 5432),
-    }
-}
-
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'CACHE': not DEBUG,
-        'BUNDLE_DIR_NAME': 'dist/', # must end with slash
-        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
-        'POLL_INTERVAL': 0.1,
-        'TIMEOUT': None,
-        'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
     }
 }
 
@@ -206,14 +205,14 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
 # Example: "http://example.com/static/", "http://static.example.com/"
 STATIC_URL = '/static/'
 
-YARN_ROOT_PATH = BASE_DIR
+NPM_ROOT_PATH = BASE_DIR
 
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'yarn.finders.YarnFinder',
+    'npm.finders.NpmFinder',
     # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
