@@ -18,7 +18,11 @@ def canvas_id_to_incremented_id(canvas_id):
     except ValueError:
         return None
 
+<<<<<<< HEAD
     return int(canvas_id) + settings.CANVAS_DATA_ID_INCREMENT
+=======
+    return str(int(canvas_id) + settings.CANVAS_DATA_ID_INCREMENT)
+>>>>>>> 4881dd7... Merging master changes into react (#467)
 
 def incremented_id_to_canvas_id(incremented_id):
     try:
