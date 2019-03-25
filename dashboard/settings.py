@@ -16,6 +16,8 @@ import json
 from debug_toolbar import settings as dt_settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from decouple import config
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 APPLICATION_DIR = os.path.dirname(globals()['__file__'])
@@ -56,10 +58,10 @@ WATCHMAN_TOKEN_NAME = ENV.get('DJANGO_WATCHMAN_TOKEN_NAME', 'token')
 WATCHMAN_DATABASES = ('default',)
 
 # Defaults for PTVSD
-PTVSD_ENABLE = ENV.get("PTVSD_ENABLE", False)
-PTVSD_REMOTE_ADDRESS = ENV.get("PTVSD_REMOTE_ADDRESS", "0.0.0.0")
-PTVSD_REMOTE_PORT = ENV.get("PTVSD_REMOTE_PORT", 3000)
-PTVSD_WAIT_FOR_ATTACH = ENV.get("PTVSD_WAIT_FOR_ATTACH", False)
+PTVSD_ENABLE = config("PTVSD_ENABLE", default=False, cast=bool)
+PTVSD_REMOTE_ADDRESS = config("PTVSD_REMOTE_ADDRESS", default="0.0.0.0")
+PTVSD_REMOTE_PORT = config("PTVSD_REMOTE_PORT", default=3000, cast=int)
+PTVSD_WAIT_FOR_ATTACH = config("PTVSD_WAIT_FOR_ATTACH", default=False, cast=bool)
 
 # Application definition
 
@@ -169,12 +171,12 @@ DATABASES = {
         'PORT': ENV.get('MYSQL_PORT', 3306),
     },
     'DATA_WAREHOUSE': {
-        'ENGINE': ENV.get('DATA_WAREHOUSE_ENGINE', 'django.db.backends.postgresql'),
-        'NAME': ENV.get('DATA_WAREHOUSE_DATABASE', ''),
-        'USER': ENV.get('DATA_WAREHOUSE_USER', ''),
-        'PASSWORD': ENV.get('DATA_WAREHOUSE_PASSWORD', ''),
-        'HOST': ENV.get('DATA_WAREHOUSE_HOST', ''),
-        'PORT': ENV.get('DATA_WAREHOUSE_PORT', 5432),
+        'ENGINE': config('DATA_WAREHOUSE_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': config('DATA_WAREHOUSE_DATABASE', default=''),
+        'USER': config('DATA_WAREHOUSE_USER', default=''),
+        'PASSWORD': config('DATA_WAREHOUSE_PASSWORD', default=''),
+        'HOST': config('DATA_WAREHOUSE_HOST', default=''),
+        'PORT': config('DATA_WAREHOUSE_PORT', default=5432, cast=int),
     }
 }
 
@@ -386,10 +388,10 @@ if ENV.get('STUDENT_DASHBOARD_LTI', False):
         "custom_canvas_course_id")
 
 # controls whether Unizin specific features/data is available from the Canvas Data source
-DATA_WAREHOUSE_IS_UNIZIN = ENV.get("DATA_WAREHOUSE_IS_UNIZIN", True)
+DATA_WAREHOUSE_IS_UNIZIN = config("DATA_WAREHOUSE_IS_UNIZIN", default=True, cast=bool)
 
 # This is used to fix ids from Canvas Data which are incremented by some large number
-CANVAS_DATA_ID_INCREMENT = ENV.get("CANVAS_DATA_ID_INCREMENT", 17700000000000000)
+CANVAS_DATA_ID_INCREMENT = config("CANVAS_DATA_ID_INCREMENT", default="17700000000000000", cast=int)
 
 # Allow enabling/disabling the View options globally
 VIEWS_DISABLED = ENV.get('VIEWS_DISABLED', [])
@@ -430,10 +432,6 @@ CANVAS_FILE_POSTFIX = ENV.get("CANVAS_FILE_POSTFIX", "")
 
 # strings for construct file download url
 
-CANVAS_FILE_ID_NAME_SEPARATOR = "|"
-# IMPORT LOCAL ENV
-# =====================
-try:
-    from settings_local import *
-except ImportError:
-    pass
+CLIENT_CACHE_TIME = config("CLIENT_CACHE_TIME", default=3600, cast=int)
+
+CRON_BQ_IN_LIMIT = config("CRON_BQ_IN_LIMIT", default=20, cast=int)

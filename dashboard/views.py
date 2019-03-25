@@ -14,6 +14,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from pinax.eventlog.models import log as eventlog
 from dashboard.event_logs_types.event_logs_types import EventLogTypes
+from dashboard.common.db_util import canvas_id_to_incremented_id
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -143,7 +144,7 @@ def file_access_within_week(request, course_id=0):
 
 
     # get total number of student within the course_id
-    total_number_student_sql = "select count(*) from user where course_id = %(course_id)s and enrollment_type='StudentEnrollment'"
+    total_number_student_sql = "select count(*) from user where course_id = %(course_id)s"
     if (grade == GRADE_A):
         total_number_student_sql += " and current_grade >= 90"
     elif (grade == GRADE_B):
@@ -153,7 +154,7 @@ def file_access_within_week(request, course_id=0):
 
     total_number_student_df = pd.read_sql(total_number_student_sql, conn, params={"course_id": course_id})
     total_number_student = total_number_student_df.iloc[0,0]
-    logger.info(f"course_id {course_id} total student={total_number_student}")
+    logger.info("course_id_string" + course_id + " total student=" + str(total_number_student))
 
     term_date_start = AcademicTerms.objects.course_date_start(course_id)
 
@@ -265,12 +266,11 @@ def file_access_within_week(request, course_id=0):
 def grade_distribution(request, course_id=0):
     logger.info(grade_distribution.__name__)
 
-    course_id = int(str(settings.UDW_ID_PREFIX) + course_id)
+    course_id = canvas_id_to_incremented_id(course_id)
 
     current_user = request.user.get_username()
     grade_score_sql = "select current_grade,(select current_grade from user where sis_name=" \
-                      "%(current_user)s and course_id=%(course_id)s) as current_user_grade " \
-                      "from user where course_id=%(course_id)s and enrollment_type='StudentEnrollment';"
+                      "%(current_user)s and course_id=%(course_id)s) as current_user_grade from user where course_id=%(course_id)s"
     df = pd.read_sql(grade_score_sql, conn, params={"current_user": current_user,'course_id': course_id})
     if df.empty or df['current_grade'].isnull().all():
         return HttpResponse(json.dumps({}), content_type='application/json')
@@ -353,7 +353,7 @@ def get_user_default_selection(request, course_id=0):
 def assignments(request, course_id=0):
     logger.info(assignments.__name__)
 
-    course_id = int(str(settings.UDW_ID_PREFIX) + course_id)
+    course_id = canvas_id_to_incremented_id(course_id)
 
     current_user = request.user.get_username()
     df_default_display_settings()
