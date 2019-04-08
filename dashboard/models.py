@@ -195,8 +195,8 @@ class CourseViewOption(models.Model):
 
     def json(self, include_id=True):
         """Format the json output that we want for this record
-
-        :param include_id: Whether or not to include the id in the return
+        
+        :param include_id: Whether or not to include the id in the return 
         This should be of the format canvas_id : {options}
         :return: JSON formatted CourseViewOption
         :rtype: Dict
