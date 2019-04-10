@@ -1,6 +1,6 @@
 // modified from https://demos.creative-tim.com/material-dashboard-react/?_ga=2.12819711.913135977.1549993496-494583875.1549993496#/table
 
-import React from 'react'
+import React, {useRef, useEffect} from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import Table from '@material-ui/core/Table'
 import TableHead from '@material-ui/core/TableHead'
@@ -69,11 +69,14 @@ const getCurrentWeek = data => {
       weekIndicator = `Week ${week}`
     }
   })
-  return weekIndicator
+  // return weekIndicator
+  return 'Week 7'
 }
 
-function CustomAssignmentTable (props) {
+function CustomAssignmentTable (props, ref) {
   const { classes, tableHead, tableData } = props
+  const scrollToCurrentWeek = useRef();
+  console.log(scrollToCurrentWeek)
   const data = generateAssignmentTable(tableData)
     .map(row => {
       const { percentOfFinalGrade, graded } = row.pop()
@@ -85,8 +88,21 @@ function CustomAssignmentTable (props) {
       return row
     })
   const currentWeek = getCurrentWeek(tableData)
+  useEffect(() => {
+    console.log("are you in UseEffect")
+    console.log(scrollToCurrentWeek.current)
+    window.scrollTo({behavior: 'smooth', top: scrollToCurrentWeek.current.offsetTop})
+    // scrollToCurrentWeek.current.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"})
+  });
+
+  const submitButton = () => {
+    console.log("Scroll button")
+    window.scrollTo({behavior: 'smooth', top: scrollToCurrentWeek.current.offsetTop})
+  };
+
   return (
     <div className={classes.tableResponsive}>
+      <button onClick={submitButton}>Scroll</button>
       <Table>
         {tableHead !== undefined ? (
           <TableHead>
@@ -105,7 +121,7 @@ function CustomAssignmentTable (props) {
         <TableBody>
           {data.map((row, i) => {
             return (
-              <TableRow key={i}>
+              <TableRow key={i} ref={i===11?scrollToCurrentWeek:null}>
                 {
                   row.map((prop, j) => {
                     let displayProp = true
