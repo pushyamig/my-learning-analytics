@@ -88,6 +88,9 @@ Before adding adding initial terms and courses, ensure that the `CANVAS_DATA_ID_
 
     `docker exec -it student_dashboard bash ./demo_init.sh`
 
+If you have problems you can connect direct into a specific container with the command
+
+    `docker-compose run web /bin/bash
 # Create a super user to test login.
 
 On the both local dev and remote the users are stored in the local database. However on local the users have to be created via the command line, on Openshift they are created either manually in the database or when logged in via Shibboleth.
@@ -148,6 +151,12 @@ This will remove everything! (images, containers, volumes)
 
 *Docker stores MySQL data locally in the directory `.data`. If you want to fully clean you'll have to remove this folder.*
 
+## Populating Copyright information in footer
+1. Since MyLA can be used by multiple institution, copyright information needs to be entitled to institutions needs. 
+2. Django Flatpages serves the purpose. The display of the copyright content can be controlled from the Django Admin view. 
+3. The url for configuring copyright info must be `/copyright/` since that is used in the `base.html` for pulling the info
+[More info](https://simpleisbetterthancomplex.com/tutorial/2016/10/04/how-to-use-django-flatpages-app.html)
+
 ## Testing tips!
 
 1. Connect to the docker and edit some files!
@@ -177,8 +186,6 @@ Then you can edit your files! (Probably in /code/dashboard)
 
     Set your breakpoints then run this command in the docker instance! Then connect to the cron configuration. The job will start when you attach the debugger.
     `PTVSD_WAIT_FOR_ATTACH=True PTVSD_ENABLE=TRUE PTVSD_REMOTE_PORT=3001 ./manage-ptvd.py runcrons --force`
-
-    This debug mode currently only works with django-admin commands (not gunicorn or manage.py) 
 
 ## License check
 

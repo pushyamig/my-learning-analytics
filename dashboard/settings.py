@@ -16,8 +16,6 @@ import json
 from debug_toolbar import settings as dt_settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-from decouple import config
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 APPLICATION_DIR = os.path.dirname(globals()['__file__'])
@@ -35,9 +33,13 @@ except FileNotFoundError as fnfe:
     ENV = os.environ
 
 LOGOUT_URL = '/accounts/logout'
+LOGIN_URL = '/accounts/login'
 
 # Google Analytics ID
 GA_ID = ENV.get('GA_ID', '')
+
+# This is required by flatpages flow. For Example Copyright information in the footer populated from flatpages
+SITE_ID = 1
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
@@ -58,10 +60,10 @@ WATCHMAN_TOKEN_NAME = ENV.get('DJANGO_WATCHMAN_TOKEN_NAME', 'token')
 WATCHMAN_DATABASES = ('default',)
 
 # Defaults for PTVSD
-PTVSD_ENABLE = config("PTVSD_ENABLE", default=False, cast=bool)
-PTVSD_REMOTE_ADDRESS = config("PTVSD_REMOTE_ADDRESS", default="0.0.0.0")
-PTVSD_REMOTE_PORT = config("PTVSD_REMOTE_PORT", default=3000, cast=int)
-PTVSD_WAIT_FOR_ATTACH = config("PTVSD_WAIT_FOR_ATTACH", default=False, cast=bool)
+PTVSD_ENABLE = ENV.get("PTVSD_ENABLE", False)
+PTVSD_REMOTE_ADDRESS = ENV.get("PTVSD_REMOTE_ADDRESS", "0.0.0.0")
+PTVSD_REMOTE_PORT = ENV.get("PTVSD_REMOTE_PORT", 3000)
+PTVSD_WAIT_FOR_ATTACH = ENV.get("PTVSD_WAIT_FOR_ATTACH", False)
 
 # Application definition
 
@@ -74,6 +76,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'django_cron',
@@ -81,8 +85,8 @@ INSTALLED_APPS = [
     'macros',
     'debug_toolbar',
     'pinax.eventlog',
+    'webpack_loader',
     'rules.apps.AutodiscoverRulesConfig',
-    'webpack_loader'
 ]
 
 # The order of this is important. It says DebugToolbar should be on top but
@@ -120,10 +124,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django_su.context_processors.is_su',
                 'django_settings_export.settings_export',
-                'dashboard.context_processors.course_name',
                 'dashboard.context_processors.current_user_course_id',
-                'dashboard.context_processors.current_user_incremented_course_id',
-                'dashboard.context_processors.course_view_option',
+                'dashboard.context_processors.current_user_courses_info',
                 'dashboard.context_processors.last_updated',
                 'dashboard.context_processors.get_build_info',
             ],
@@ -144,13 +146,8 @@ WEBPACK_LOADER = {
 }
 
 NPM_FILE_PATTERNS = {
-    'angular': ['angular.js'],
     'bootstrap': ['dist/css/*'],
-    'd3': ['dist/d3.min.js'],
-    'd3-tip': ['dist/index.js'],
-    'jquery': ['dist/jquery.min.js'],
-    'moment': ['min/moment.min.js'],
-    'underscore': ['underscore-min.js'],
+    'jquery': ['dist/jquery.min.js']
 }
 
 ROOT_URLCONF = 'dashboard.urls'
@@ -171,12 +168,12 @@ DATABASES = {
         'PORT': ENV.get('MYSQL_PORT', 3306),
     },
     'DATA_WAREHOUSE': {
-        'ENGINE': config('DATA_WAREHOUSE_ENGINE', default='django.db.backends.postgresql'),
-        'NAME': config('DATA_WAREHOUSE_DATABASE', default=''),
-        'USER': config('DATA_WAREHOUSE_USER', default=''),
-        'PASSWORD': config('DATA_WAREHOUSE_PASSWORD', default=''),
-        'HOST': config('DATA_WAREHOUSE_HOST', default=''),
-        'PORT': config('DATA_WAREHOUSE_PORT', default=5432, cast=int),
+        'ENGINE': ENV.get('DATA_WAREHOUSE_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': ENV.get('DATA_WAREHOUSE_DATABASE', ''),
+        'USER': ENV.get('DATA_WAREHOUSE_USER', ''),
+        'PASSWORD': ENV.get('DATA_WAREHOUSE_PASSWORD', ''),
+        'HOST': ENV.get('DATA_WAREHOUSE_HOST', ''),
+        'PORT': ENV.get('DATA_WAREHOUSE_PORT', 5432),
     }
 }
 
@@ -367,6 +364,7 @@ if ENV.get('STUDENT_DASHBOARD_SAML', True):
 else:
     AUTHENTICATION_BACKENDS += ('django.contrib.auth.backends.ModelBackend',)
     LOGIN_REDIRECT_URL = '/'
+    LOGOUT_REDIRECT_URL='/'
 
 # Give an opportunity to disable LTI
 if ENV.get('STUDENT_DASHBOARD_LTI', False):
@@ -388,10 +386,10 @@ if ENV.get('STUDENT_DASHBOARD_LTI', False):
         "custom_canvas_course_id")
 
 # controls whether Unizin specific features/data is available from the Canvas Data source
-DATA_WAREHOUSE_IS_UNIZIN = config("DATA_WAREHOUSE_IS_UNIZIN", default=True, cast=bool)
+DATA_WAREHOUSE_IS_UNIZIN = ENV.get("DATA_WAREHOUSE_IS_UNIZIN", True)
 
 # This is used to fix ids from Canvas Data which are incremented by some large number
-CANVAS_DATA_ID_INCREMENT = config("CANVAS_DATA_ID_INCREMENT", default="17700000000000000", cast=int)
+CANVAS_DATA_ID_INCREMENT = ENV.get("CANVAS_DATA_ID_INCREMENT", 17700000000000000)
 
 # Allow enabling/disabling the View options globally
 VIEWS_DISABLED = ENV.get('VIEWS_DISABLED', [])
@@ -432,6 +430,10 @@ CANVAS_FILE_POSTFIX = ENV.get("CANVAS_FILE_POSTFIX", "")
 
 # strings for construct file download url
 
-CLIENT_CACHE_TIME = config("CLIENT_CACHE_TIME", default=3600, cast=int)
-
-CRON_BQ_IN_LIMIT = config("CRON_BQ_IN_LIMIT", default=20, cast=int)
+CANVAS_FILE_ID_NAME_SEPARATOR = "|"
+# IMPORT LOCAL ENV
+# =====================
+try:
+    from settings_local import *
+except ImportError:
+    pass
