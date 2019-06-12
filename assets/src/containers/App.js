@@ -23,7 +23,7 @@ function App (props) {
     admin: myla_globals.is_superuser
   }
 
-  if (!user.username) return (window.location.href = 'http://localhost:5001/accounts/login')
+  if (!user.username) return (window.location.href = '/accounts/login')
   if (error) return (<Error>Something went wrong, please try again later.</Error>)
   if (loaded && isObjectEmpty(courseInfo)) return (<Error>Tool is not enabled for this course.</Error>)
 
@@ -48,7 +48,7 @@ function App (props) {
             <Route path='/:courseId/grades'
               render={props => <GradeDistribution {...props} disabled={!courseInfo.course_view_options.gd}
                 courseId={courseId} />} />
-            <Route path='/:courseId/assignment'
+            <Route path='/:courseId/assignments'
               render={props => <AssignmentPlanning {...props} disabled={!courseInfo.course_view_options.ap}
                 courseId={courseId} />} />
             <Route path='/:courseId/files'
