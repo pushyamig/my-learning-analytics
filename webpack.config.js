@@ -18,12 +18,21 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       },
       {
-        test: /\.(bmp|gif|jpeg|png|woff|woff2|eot|ttf|svg)$/,
+        test: /\.(bmp|gif|jpeg|png|eot|ttf|svg)$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: 'static/[name].[hash:8].[ext]'
+          name: 'static/[name].[ext]'
         }
+      },
+      {
+        test:/\.(woff2|woff)$/,
+        loader: 'url-loader',
+        options: {
+          mimetype: 'application/font-woff',
+          name: 'static/[name].[ext]',
+          limit: 10000
+        },
       }
     ]
   },
