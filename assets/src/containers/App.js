@@ -23,9 +23,10 @@ function App (props) {
   }
   return (
     <>
-      <GoogleAnalyticsTracking gaId={myla_globals.google_analytics_id} {...props} />
-      <Route path='/' exact render={props => <CourseList {...props} user={user} />} />
-      { courseId ? <Course user={user} courseId={courseId} {...props} /> : null }
+      <GoogleAnalyticsTracking gaId={myla_globals.google_analytics_id} />
+      {/*<Route path='/' exact render={props => <CourseList {...props} user={user} />} />*/}
+      <Route path='/courses' exact render={props => <CourseList {...props} user={user} />} />
+      { courseId ? <Course user={user} courseId={courseId} {...props} /> : <CourseList {...props} user={user} /> }
     </>
   )
 }
