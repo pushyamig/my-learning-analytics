@@ -135,12 +135,8 @@ class DashboardCronJob(CronJobBase):
                          course_fact as (select enrollment_id, current_score, final_score from course_score_fact
                                          where course_id='{data_warehouse_course_id}'),
                          final as (select u.global_canvas_id as user_id,u.name, u.sis_user_id as sis_id, u.unique_name as sis_name,
-<<<<<<< HEAD
                                    '{data_warehouse_course_id}' as course_id, c.current_score as current_grade, c.final_score as final_grade,
                                     u.type as enrollment_type
-=======
-                                   '{data_warehouse_course_id}' as course_id, c.current_score as current_grade, c.final_score as final_grade
->>>>>>> 1b7fe63... React master merge (#531)
                                     from user_enroll u left join course_fact c on u.enroll_id= c.enrollment_id)
                          select * from final
                       """
@@ -253,11 +249,7 @@ class DashboardCronJob(CronJobBase):
             except Exception as e:
                 logger.exception("Error running to_sql on table file_access")
                 raise
-<<<<<<< HEAD
             return_string += str(df.shape[0]) + " rows for courses " + ",".join(map(str, data_warehouse_course_ids)) + "\n"
-=======
-            return_string += str(df.shape[0]) + " rows for courses " + ",".join(data_warehouse_course_ids) + "\n"
->>>>>>> 1b7fe63... React master merge (#531)
             logger.info(return_string)
 
         total_tbytes_billed = total_bytes_billed / 1024 / 1024 / 1024 / 1024
