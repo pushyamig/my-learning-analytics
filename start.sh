@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 
 # Case insenstive match
 shopt -s nocaseglob
@@ -6,9 +6,6 @@ shopt -s nocaseglob
 if [ -z "${ENV_FILE}" ]; then
     ENV_FILE="/code/config/env.json"
 fi
-
-# Case insenstive match
-shopt -s nocaseglob
 
 echo $DJANGO_SETTINGS_MODULE
 
@@ -45,8 +42,8 @@ python manage.py migrate
 
 # If these values aren't set or they're set to false
 # This syntax substitutes False if null or unset
-if [ "${IS_CRON_POD:-"False"}" == "False" ]; then
-    if [ "${PTVSD_ENABLE:-"False"}" == "False" ]; then
+if [ "${IS_CRON_POD:-"false",,}" == "false" ]; then
+    if [ "${PTVSD_ENABLE:-"false",,}" == "false" ]; then
         # Start Gunicorn processes
         echo Starting Gunicorn for production
 
