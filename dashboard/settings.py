@@ -43,6 +43,7 @@ LOGIN_URL = '/accounts/login'
 # Google Analytics ID
 GA_ID = ENV.get('GA_ID', '')
 
+
 # Resource values from env
 RESOURCE_VALUES = ENV.get("RESOURCE_VALUES", {"files": ["canvas"]})
 RESOURCE_URLS = ENV.get("RESOURCE_URLS", {"canvas": {"prefix": "https://demo.instructure.com/files/", "postfix": "/download?download_frd=1"}})
@@ -284,10 +285,14 @@ AUTHENTICATION_BACKENDS = (
 if ENV.get('STUDENT_DASHBOARD_SAML', True):
     import saml2
 
+    SAML = ENV.get('SAML','')
+
     SAML2_URL_PATH = '/accounts/'
     # modify to use port request comes
-    SAML2_URL_BASE = ENV.get('DJANGO_SAML2_URL_BASE', '/accounts/')
-    SAML2_DEFAULT_IDP = ENV.get('DJANGO_SAML2_DEFAULT_IDP', '')
+
+    SAML2_URL_BASE = SAML.get('URL_BASE','/accounts/')
+    # SAML2_URL_BASE = ENV.get('DJANGO_SAML2_URL_BASE', '/accounts/')
+    SAML2_DEFAULT_IDP = SAML.get('DEFAULT_IDP', '')
     # Append the query parameter for idp to the default if it's set, otherwise do nothing
     if SAML2_DEFAULT_IDP:
         SAML2_DEFAULT_IDP = '?idp=%s' % SAML2_DEFAULT_IDP
@@ -300,9 +305,9 @@ if ENV.get('STUDENT_DASHBOARD_SAML', True):
     SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
     BASEDIR = os.path.dirname(os.path.abspath(__file__))
-    SAML2_FILES_BASE = ENV.get('SAML2_FILES_BASE', '/saml/')
-    SAML2_REMOTE_METADATA = ENV.get('SAML2_REMOTE_METADATA', '')
-    SAML2_REMOTE_PEM_FILE = ENV.get('SAML2_REMOTE_PEM_FILE', '')
+    SAML2_FILES_BASE = SAML.get('FILE_BASE', '/saml/')
+    SAML2_REMOTE_METADATA = SAML.get('METADATA_FILE', '')
+    SAML2_REMOTE_PEM_FILE = SAML.get('PEM_FILE', '')
 
     SAML_CONFIG = {
         'xmlsec_binary': '/usr/bin/xmlsec1',
@@ -358,10 +363,10 @@ if ENV.get('STUDENT_DASHBOARD_SAML', True):
         'key_file': os.path.join(SAML2_FILES_BASE, 'student-dashboard-saml.key'),  'cert_file': os.path.join(SAML2_FILES_BASE, 'student-dashboard-saml.pem'),
     }
 
-    ACS_DEFAULT_REDIRECT_URL = ENV.get('DJANGO_ACS_DEFAULT_REDIRECT', '/')
-    LOGIN_REDIRECT_URL = ENV.get('DJANGO_LOGIN_REDIRECT_URL', '/')
+    ACS_DEFAULT_REDIRECT_URL = SAML.get('ACS_DEFAULT_REDIRECT', '/')
+    LOGIN_REDIRECT_URL = SAML.get('LOGIN_REDIRECT_URL', '/')
 
-    LOGOUT_REDIRECT_URL = ENV.get('DJANGO_LOGOUT_REDIRECT_URL', '/')
+    LOGOUT_REDIRECT_URL = SAML.get('LOGOUT_REDIRECT_URL', '/')
 
     SAML_CREATE_UNKNOWN_USER = True
 
