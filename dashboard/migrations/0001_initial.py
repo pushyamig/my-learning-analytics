@@ -154,6 +154,7 @@ class Migration(migrations.Migration):
                 ('course', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to='dashboard.Course', verbose_name='Course View Option Id')),
                 ('show_files_accessed', models.BooleanField(default=True, verbose_name='Show Files Accessed View')),
                 ('show_assignment_planning', models.BooleanField(default=True, verbose_name='Show Assignment Planning View')),
+                ('show_assignment_planning_v2', models.BooleanField(default=True, verbose_name='Show Assignment Planning View v2')),
                 ('show_grade_distribution', models.BooleanField(default=True, verbose_name='Show Grade Distribution View')),
             ],
             options={
