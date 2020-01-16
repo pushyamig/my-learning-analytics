@@ -13,6 +13,7 @@ import { useCourseInfo } from '../service/api'
 import WarningBanner from '../components/WarningBanner'
 
 function Course (props) {
+  console.log("PLease this you are here")
   const { courseId, user } = props
   const [loaded, error, courseInfo] = useCourseInfo(courseId)
   const [sideDrawerState, setSideDrawerState] = useState(false)
@@ -61,7 +62,7 @@ function Course (props) {
                 />}
             />
             <Route
-              path='/courses/:courseId/assignments'
+              path='/courses/:courseId/assignmentsv1'
               render={props =>
                 <AssignmentPlanning
                   {...props}
@@ -70,11 +71,11 @@ function Course (props) {
                 />}
             />
             <Route
-              path='/courses/:courseId/assignmentsv2'
+              path='/courses/:courseId/assignments'
               render={props =>
                 <AssignmentPlanningV2
                   {...props}
-                  disabled={!courseInfo.course_view_options.apv2}
+                  disabled={!courseInfo.course_view_options.ap}
                   courseId={courseId}
                 />}
             />

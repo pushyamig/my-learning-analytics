@@ -208,7 +208,6 @@ class CourseViewOption(models.Model):
     show_resources_accessed = models.BooleanField(blank=False, null=False, default=True, verbose_name="Show Resources Accessed View")
     show_assignment_planning_v1 = models.BooleanField(blank=False, null=False, default=True, verbose_name="Show Assignment Planning v1 View")
     show_assignment_planning = models.BooleanField(blank=False, null=False, default=True, verbose_name="Show Assignment Planning View")
-    show_assignment_planning_v2 = models.BooleanField(blank=False, null=False, default=True, verbose_name="Show Assignment Planning v2 View")
     show_grade_distribution = models.BooleanField(blank=False, null=False, default=True, verbose_name="Show Grade Distribution View")
 
     VIEWS = ['show_resources_accessed', 'show_assignment_planning_v1', 'show_assignment_planning', 'show_grade_distribution']
@@ -218,7 +217,6 @@ class CourseViewOption(models.Model):
         if self.show_resources_accessed and 'show_resources_accessed' not in settings.VIEWS_DISABLED: retval += "Resources Accessed\n"
         if self.show_assignment_planning_v1 and 'show_assignment_planning_v1' not in settings.VIEWS_DISABLED: retval += "Assignment Planning v1\n"
         if self.show_assignment_planning and 'show_assignment_planning' not in settings.VIEWS_DISABLED: retval += "Assignment Planning\n"
-        if self.show_assignment_planning_v2 and 'show_assignment_planning_v2' not in settings.VIEWS_DISABLED: retval += "Assignment Planning v2\n"
         if self.show_grade_distribution and 'show_grade_distribution' not in settings.VIEWS_DISABLED: retval += "Grade Distribution\n"
         return retval
 
@@ -241,8 +239,6 @@ class CourseViewOption(models.Model):
                        'apv1': int(self.show_assignment_planning_v1 and 'show_assignment_planning_v1'
                                  not in settings.VIEWS_DISABLED),
                        'ap': int(self.show_assignment_planning and 'show_assignment_planning'
-                                 not in settings.VIEWS_DISABLED),
-                       'apv2': int(self.show_assignment_planning_v2 and 'show_assignment_planning_v2'
                                  not in settings.VIEWS_DISABLED),
                        'gd': int(self.show_grade_distribution and 'show_grade_distribution'
                                  not in settings.VIEWS_DISABLED),}
