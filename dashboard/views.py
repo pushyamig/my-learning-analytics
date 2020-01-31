@@ -313,7 +313,9 @@ def grade_distribution(request, course_id=0):
         from user where course_id=%(course_id)s and enrollment_type='StudentEnrollment';
                     """
     df = pd.read_sql(grade_score_sql, conn, params={"current_user": current_user, 'course_id': course_id})
-    if df.empty or df['current_grade'].isnull().all():
+    df.to_json(f"{course_id}.json",orient='records')
+    if df.empty or df['current_grade'].isnull().all() or df.count().current_grade < 6:
+        logger.info(f"Count of students for a course {course_id} is {df.count().current_grade}")
         return HttpResponse(json.dumps({}), content_type='application/json')
 
     grade_view_data = dict()
