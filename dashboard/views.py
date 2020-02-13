@@ -203,6 +203,7 @@ def resource_access_within_week(request, course_id=0):
     # return if there is no data during this interval
     if (df.empty):
         return HttpResponse("{}")
+    df.to_json(f"{course_id}_resources.json",orient='records')
 
     # group by resource_id, and resource_name
     # reformat for output

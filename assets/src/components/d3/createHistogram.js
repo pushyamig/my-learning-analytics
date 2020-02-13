@@ -124,7 +124,7 @@ function createHistogram ({ data, width, height, domElement, xAxisLabel, yAxisLa
       .attr('font-size', '0.875rem')
       .attr('font-weight', 'bold')
       .attr('line-height', '1.46429em')
-      .attr('text-anchor', 'start')
+      .attr('text-anchor', 'middle')
   }
   // Dashed line to show difference b/w binned and normal distribution
   if (showDashedLine) {

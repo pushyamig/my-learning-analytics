@@ -1,5 +1,6 @@
 const path = require('path')
 const BundleTracker = require('webpack-bundle-tracker')
+// const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
   entry: path.join(__dirname, 'assets/src/index'),
@@ -7,6 +8,7 @@ module.exports = {
     path: path.join(__dirname, 'assets/dist'),
     filename: '[name]-[hash].js'
   },
+  devtool: 'inline-source-map',
   module: {
     rules: [
       {
@@ -28,6 +30,7 @@ module.exports = {
     ]
   },
   plugins: [
+    // new CleanWebpackPlugin(),
     new BundleTracker({
       path: __dirname,
       filename: 'webpack-stats.json'

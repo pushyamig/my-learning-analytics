@@ -25,8 +25,6 @@ COPY --from=node-webpack /usr/src/app /usr/src/app
 RUN npm prune --production && \
     # This is needed to clean up the examples files as these cause collectstatic to fail (and take up extra space)
     find /usr/src/app/node_modules -type d -name "examples" -print0 | xargs -0 rm -rf
-
-# FROM directive instructing base image to build upon
 FROM python:3.7 AS app
 
 # EXPOSE port 5000 to allow communication to/from server

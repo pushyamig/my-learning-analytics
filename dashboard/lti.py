@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 RANDOM_PASSWORD_DEFAULT_LENGTH = 32
 
 def valid_lti_request(user_payload, request):
+    print("are you getting to LTI place")
     username = user_payload.get(settings.LTI_PERSON_SOURCED_ID_FIELD, None)
     email = user_payload.get(settings.LTI_EMAIL_FIELD,  None)
     canvas_course_id = user_payload.get(settings.LTI_CANVAS_COURSE_ID_FIELD, None)

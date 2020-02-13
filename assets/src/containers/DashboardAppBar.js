@@ -63,8 +63,9 @@ function DashboardAppBar (props) {
             <MenuIcon />
           </IconButton>
           <Button href='/courses/' className={classes.homeButton}>
-            My Learning Analytics:
+            My Learning Analytihhhhhhhhhhhhcs:
           </Button>
+          <div>SOrry</div>
           <Button href={`/courses/${courseId}`} className={classes.homeButton}>
             {courseName}
           </Button>

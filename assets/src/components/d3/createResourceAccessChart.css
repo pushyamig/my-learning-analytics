@@ -26,3 +26,16 @@
     top: 100%;
     left: 0;
   }
+  .yaxis-text {
+      background-color: green;
+      z-index:100
+      /*display: flex;*/
+      /*width: 100%;*/
+      /*justify-content: space-between;*/
+      /*align-items: center;*/
+      /*overflow: hidden;*/
+      /*padding: 5px;*/
+      /*min-width: 0;*/
+      /*text-overflow: ellipsis;*/
+      /*white-space: nowrap;*/
+  }

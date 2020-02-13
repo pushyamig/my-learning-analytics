@@ -152,6 +152,7 @@ TEMPLATES = [
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'assets'),
 )
+print(STATICFILES_DIRS)
 
 WEBPACK_LOADER = {
     'DEFAULT': {
@@ -160,6 +161,7 @@ WEBPACK_LOADER = {
         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
     }
 }
+print(WEBPACK_LOADER)
 
 NPM_FILE_PATTERNS = {
     'bootstrap': ['dist/css/*'],

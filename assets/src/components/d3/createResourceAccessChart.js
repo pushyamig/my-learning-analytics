@@ -193,7 +193,8 @@ function createResourceAccessChart ({ data, width, height, domElement }) {
     const mainYAxis = d3
       .axisLeft(mainYScale)
       .tickSize(0)
-      .tickFormat(d => truncate(d.split('|')[1]))
+      // .tickFormat(d => truncate(d.split('|')[1]))
+      .tickFormat(d => d.split('|')[1])
 
     mainGroup.select('.axis--y').call(mainYAxis)
 
@@ -217,6 +218,19 @@ function createResourceAccessChart ({ data, width, height, domElement }) {
       .attr('fill', '#0000EE')
       .style('font-size', textScale(selected.length))
 
+    d3.selectAll('.axis--y .tick')
+      .selectAll('text').html('').each(function (d) {
+        d3.select(this).insert('foreignObject')
+          .attr('x', -180)
+          .attr('y', -6)
+          .attr('width', 32)
+          .attr('height', 32)
+          .attr('color', '#0000EE')
+          .append('xhtml:div')
+          // .attr('class', 'yaxis-text')
+          .text(d.split('|')[1])
+      })
+
     update()
   }
 
@@ -233,7 +247,7 @@ function createResourceAccessChart ({ data, width, height, domElement }) {
     gBrush.call(brush.move, [center - size / 2, center + size / 2])
   }
 
-  const truncate = (text) => text.length > 23 ? `${text.substring(0, 23)}...` : text
+  // const truncate = (text) => text.length > 19 ? `${text.substring(0, 19)}...` : text
 
   // Main chart group
   const mainGroup = svg.append('g')
@@ -264,7 +278,8 @@ function createResourceAccessChart ({ data, width, height, domElement }) {
 
   const mainYAxis = d3.axisLeft(mainYScale)
     .tickSize(0)
-    .tickFormat(d => truncate(d.split('|')[1]))
+    .tickFormat(d => d.split('|')[1])
+    // .tickFormat(d => truncate(d.split('|')[1]))
 
   // Brush
   const brush = d3.brushY()
@@ -378,6 +393,18 @@ function createResourceAccessChart ({ data, width, height, domElement }) {
       .append('xhtml:i')
       .attr('class', icon)
   })
+
+  d3.selectAll('.axis--y .tick')
+    .selectAll('text').html('').each(function (d) {
+      d3.select(this).insert('foreignObject')
+        .attr('x', -180)
+        .attr('y', -6)
+        .attr('width', 32)
+        .attr('height', 32)
+        .attr('color', '#0000EE')
+        .append('xhtml:div').attr('class', 'yaxis-text').attr('width', 32).attr('height', 32).attr('x', -180).attr('y', -6)
+        .text(d.split('|')[1])
+    })
 }
 
 export default createResourceAccessChart
