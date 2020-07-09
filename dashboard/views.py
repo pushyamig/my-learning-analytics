@@ -26,15 +26,12 @@ from collections import namedtuple
 from django.views.decorators.csrf import csrf_exempt
 
 from dashboard.models import Course, CourseViewOption, Resource, UserDefaultSelection, User
-from dashboard.settings import RESOURCE_VALUES, RESOURCE_VALUES_MAP, RESOURCE_ACCESS_CONFIG
+from dashboard.settings import RESOURCE_VALUES, RESOURCE_VALUES_MAP, RESOURCE_ACCESS_CONFIG,LTIV1P3
 from dashboard.settings import COURSES_ENABLED
 
-from pylti1p3.contrib.django import DjangoOIDCLogin, DjangoMessageLaunch, DjangoCacheDataStorage, DjangoDbToolConf
-from pylti1p3.deep_link_resource import DeepLinkResource
-from pylti1p3.grade import Grade
-from pylti1p3.lineitem import LineItem
-from pylti1p3.tool_config import ToolConfJsonFile
-from pylti1p3.registration import Registration
+from pylti1p3.contrib.django import DjangoOIDCLogin, DjangoMessageLaunch, DjangoCacheDataStorage
+from pylti1p3.contrib.django.redirect import DjangoRedirect
+from pylti1p3.tool_config import ToolConfJsonFile, ToolConfDict
 from django.contrib.auth.models import User
 
 logger = logging.getLogger(__name__)
@@ -67,109 +64,6 @@ def gpa_map(grade):
     else:
         return GRADE_LOW
 
-class ExtendedDjangoMessageLaunch(DjangoMessageLaunch):
-
-    def validate_nonce(self):
-        print("************** validate_nounce called")
-        """
-        Probably it is bug on "https://lti-ri.imsglobal.org":
-        site passes invalid "nonce" value during deep links launch.
-        Because of this in case of iss == http://imsglobal.org just skip nonce validation.
-
-        """
-        iss = self.get_iss()
-        deep_link_launch = self.is_deep_link_launch()
-        if iss == "http://imsglobal.org" and deep_link_launch:
-            return self
-        return super(ExtendedDjangoMessageLaunch, self).validate_nonce()
-
-
-def get_lti_config_path():
-    print("********** get config data")
-    return os.path.join(settings.BASE_DIR, '..', 'secrets', 'lti.json')
-
-
-def get_tool_conf():
-    print("********** get_tool_conf")
-    tool_conf = ToolConfJsonFile(get_lti_config_path())
-    return tool_conf
-
-
-def get_launch_data_storage():
-    print("************** get_launch_data_storage")
-    return DjangoCacheDataStorage()
-
-
-def get_launch_url(request):
-    print("************** get_launch_url")
-    target_link_uri = request.POST.get('target_link_uri', request.GET.get('target_link_uri'))
-    if not target_link_uri:
-        raise Exception('Missing "target_link_uri" param')
-    return target_link_uri
-
-
-### LTI 1.3 stuff
-@csrf_exempt
-def login(request):
-    logger.info("LTI Login called...........")
-    tool_conf = get_tool_conf()
-    launch_data_storage = get_launch_data_storage()
-    logger.info("############ launch_data_storage data ####################")
-    logger.info(launch_data_storage)
-    oidc_login = DjangoOIDCLogin(request, tool_conf, launch_data_storage=launch_data_storage)
-    target_link_uri = get_launch_url(request)
-    return oidc_login.enable_check_cookies().redirect(target_link_uri)
-
-
-def get_jwks(request):
-    logger.info("************** get_jwks() ")
-    tool_conf = get_tool_conf()
-    return JsonResponse(tool_conf.get_jwks(), safe=False)
-
-
-def validate_lti_1_3_request(request):
-    username = 'xxxx'
-    course = 335188
-    email = 'xxxx@umich.edu'
-    first_name = 'xxxx'
-    last_name = 'xxxx'
-    RANDOM_PASSWORD_DEFAULT_LENGTH = 32
-    try:
-        user_obj = User.objects.get(username=username)
-    except User.DoesNotExist:
-        password = ''.join(random.sample(string.ascii_letters, RANDOM_PASSWORD_DEFAULT_LENGTH))
-        user_obj = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
-    user_obj.backend = 'django.contrib.auth.backends.ModelBackend'
-    django.contrib.auth.login(request, user_obj)
-
-
-@require_POST
-@csrf_exempt
-def launch(request):
-    logger.info("**************** LTI Launch of the tool")
-    tool_conf = get_tool_conf()
-    launch_data_storage = get_launch_data_storage()
-    logger.info("launch_data_storage")
-    message_launch = ExtendedDjangoMessageLaunch(request, tool_conf, launch_data_storage=launch_data_storage)
-    message_launch_data = message_launch.get_launch_data()
-    logger.info(message_launch_data)
-    course = 335188
-
-    difficulty_ = {
-        'is_deep_link_launch': message_launch.is_deep_link_launch(),
-        'launch_data': message_launch.get_launch_data(),
-        'launch_id': message_launch.get_launch_id(),
-        'curr_user_name': message_launch_data.get('name', ''),
-    }
-    print(difficulty_)
-    validate_lti_1_3_request(request)
-    url = reverse('home')
-    logger.info(f"Home URL for LTI launch {url}")
-    if course:
-        url = reverse('courses', kwargs={ 'course_id': course })
-        logger.info(f"Course URL for LTI launch {url}")
-    return HttpResponseRedirect(url)
-    # return render(request, 'frontend/index.html')
 
 def get_home_template(request):
     return render(request, 'frontend/index.html')
@@ -193,6 +87,9 @@ def get_course_info(request, course_id=0):
     try:
         course = Course.objects.get(id=course_id)
     except ObjectDoesNotExist:
+        return HttpResponse("{}")
+
+    if course.term_id is None:
         return HttpResponse("{}")
 
     course_resource_list = []
