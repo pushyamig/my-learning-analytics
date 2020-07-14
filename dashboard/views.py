@@ -10,6 +10,7 @@ import numpy as np
 import os
 import string
 import random
+from . import ltiv1p3
 import pandas as pd
 from django.conf import settings
 from django.urls import reverse
@@ -165,6 +166,12 @@ def resource_access_within_week(request, course_id=0):
     # read quefrom request param
     week_num_start = int(request.GET.get('week_num_start','1'))
     week_num_end = int(request.GET.get('week_num_end','0'))
+    launchId = request.GET.get('launchId')
+    logger.info(f"LaunchId from Resource access: {launchId}")
+    launch_data_storage = DjangoCacheDataStorage(cache_name='default')
+    message_launch = DjangoMessageLaunch.from_cache(launchId, request, ltiv1p3.get_tool_conf(),
+                                                    launch_data_storage=launch_data_storage)
+    logger.info(f"Message launch info from cache: {message_launch}")
     grade = request.GET.get('grade','all')
     filter_values = request.GET.get(RESOURCE_TYPE_STRING, ['files', 'videos'])
     filter_values = filter_values.split(",")
