@@ -1,5 +1,4 @@
 from django.forms.models import model_to_dict
-from django.views.decorators.http import require_POST
 from rules.contrib.views import permission_required, objectgetter
 
 import math, json, logging
@@ -7,16 +6,11 @@ from datetime import timedelta
 from django.utils import timezone
 
 import numpy as np
-import os
-import string
-import random
 from . import ltiv1p3
 import pandas as pd
 from django.conf import settings
-from django.urls import reverse
-import django.contrib.auth
 from django.db import connection as conn
-from django.http import HttpResponse, HttpResponseForbidden, JsonResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect, render
 from pinax.eventlog.models import log as eventlog
 from dashboard.event_logs_types.event_logs_types import EventLogTypes
@@ -24,19 +18,14 @@ from dashboard.common.db_util import canvas_id_to_incremented_id
 from dashboard.common import utils
 from django.core.exceptions import ObjectDoesNotExist
 from collections import namedtuple
-from django.views.decorators.csrf import csrf_exempt
 
 from dashboard.models import Course, CourseViewOption, Resource, UserDefaultSelection, User
 from dashboard.settings import RESOURCE_VALUES, RESOURCE_VALUES_MAP, RESOURCE_ACCESS_CONFIG,LTIV1P3
 from dashboard.settings import COURSES_ENABLED
 
-from pylti1p3.contrib.django import DjangoOIDCLogin, DjangoMessageLaunch, DjangoCacheDataStorage
-from pylti1p3.contrib.django.redirect import DjangoRedirect
-from pylti1p3.tool_config import ToolConfJsonFile, ToolConfDict
-from django.contrib.auth.models import User
+from pylti1p3.contrib.django import DjangoMessageLaunch, DjangoCacheDataStorage
 
 logger = logging.getLogger(__name__)
-# strings for construct resource download url
 
 CANVAS_FILE_ID_NAME_SEPARATOR = "|"
 
@@ -88,9 +77,6 @@ def get_course_info(request, course_id=0):
     try:
         course = Course.objects.get(id=course_id)
     except ObjectDoesNotExist:
-        return HttpResponse("{}")
-
-    if course.term_id is None:
         return HttpResponse("{}")
 
     course_resource_list = []
