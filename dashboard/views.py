@@ -6,9 +6,9 @@ from datetime import timedelta
 from django.utils import timezone
 
 import numpy as np
-from . import ltiv1p3
 import pandas as pd
 from django.conf import settings
+from django.contrib import auth
 from django.db import connection as conn
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import redirect, render
@@ -20,12 +20,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from collections import namedtuple
 
 from dashboard.models import Course, CourseViewOption, Resource, UserDefaultSelection, User
-from dashboard.settings import RESOURCE_VALUES, RESOURCE_VALUES_MAP, RESOURCE_ACCESS_CONFIG,LTIV1P3
+from dashboard.settings import RESOURCE_VALUES, RESOURCE_VALUES_MAP, RESOURCE_ACCESS_CONFIG
 from dashboard.settings import COURSES_ENABLED
 
-from pylti1p3.contrib.django import DjangoMessageLaunch, DjangoCacheDataStorage
-
 logger = logging.getLogger(__name__)
+# strings for construct resource download url
 
 CANVAS_FILE_ID_NAME_SEPARATOR = "|"
 
@@ -152,12 +151,6 @@ def resource_access_within_week(request, course_id=0):
     # read quefrom request param
     week_num_start = int(request.GET.get('week_num_start','1'))
     week_num_end = int(request.GET.get('week_num_end','0'))
-    launchId = request.GET.get('launchId')
-    logger.info(f"LaunchId from Resource access: {launchId}")
-    launch_data_storage = DjangoCacheDataStorage(cache_name='default')
-    message_launch = DjangoMessageLaunch.from_cache(launchId, request, ltiv1p3.get_tool_conf(),
-                                                    launch_data_storage=launch_data_storage)
-    logger.info(f"Message launch info from cache: {message_launch}")
     grade = request.GET.get('grade','all')
     filter_values = request.GET.get(RESOURCE_TYPE_STRING, ['files', 'videos'])
     filter_values = filter_values.split(",")
