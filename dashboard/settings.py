@@ -195,6 +195,7 @@ DATABASES = {
         'PASSWORD': ENV.get('MYSQL_PASSWORD', 'student_dashboard_password'), # password for user
         'HOST': ENV.get('MYSQL_HOST', 'localhost'),
         'PORT': ENV.get('MYSQL_PORT', 3306),
+        'OPTIONS': {'charset': 'utf8mb4'},
     },
     'DATA_WAREHOUSE': {
         'ENGINE': ENV.get('DATA_WAREHOUSE_ENGINE', 'django.db.backends.postgresql'),
@@ -287,7 +288,11 @@ LOGGING = {
     },
 }
 
-DB_CACHE_CONFIGS = ENV.get('DB_CACHE_CONFIGS', {})
+DB_CACHE_CONFIGS = ENV.get('DB_CACHE_CONFIGS', {"CACHE_TTL": 7200, "BACKEND": "django_mysql.cache.MySQLCache",
+                                                "LOCATION": "django_myla_cache",
+                                                "CACHE_KEY_PREFIX": "myla",
+                                                "CACHE_OPTIONS": {"COMPRESS_MIN_LENGTH": 5000, "COMPRESS_LEVEL": 6}
+                                                })
 
 CACHES = {
     'default': {
