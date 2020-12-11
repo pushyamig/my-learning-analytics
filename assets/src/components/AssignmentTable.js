@@ -134,7 +134,6 @@ function AssignmentTable (props) {
 
   const currentDate = new Date()
   const currentWeek = calculateWeekOffset(dateStart, currentDate)
-  // const previousWeek = currentWeek - 1
 
   const maxPercentOfFinalGrade = Math.max(
     ...assignments.map(({ percentOfFinalGrade }) => percentOfFinalGrade)
@@ -170,7 +169,7 @@ function AssignmentTable (props) {
   // this effect scrolls to current week of assignments if it exists
   useEffect(() => {
     if (previousWeekRow.current) {
-      const tableHeaderOffset = -74 // Manually measured height of table header row
+      const tableHeaderOffset = -58 // Manually measured height of table header row
       tableRef.current.scrollTo({
         top: previousWeekRow.current.offsetTop - tableHeaderOffset,
         behavior: 'smooth'
@@ -186,8 +185,9 @@ function AssignmentTable (props) {
 
   useEffect(() => {
     setWeeksPresentInCollection([...new Set(assignments.map(a => a.week))].sort((a, b) => { return a - b }))
+    const firstItem = weeksPresent.indexOf(0) === -1 ? weeksPresent.indexOf(1) : weeksPresent.indexOf(0)
     const indexOfCurrentWeek = weeksPresent.indexOf(currentWeek)
-    if (indexOfCurrentWeek > 0) {
+    if (indexOfCurrentWeek > 0 && firstItem !== indexOfCurrentWeek) {
       setPreviousWeek(weeksPresent[indexOfCurrentWeek - 1])
     }
   }, [assignments])
