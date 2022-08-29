@@ -50,4 +50,6 @@ const siteTheme = createTheme({
 })
 const gaId = mylaGlobals.google_analytics_id
 
-export { user, siteTheme, gaId, viewHelpURLs, surveyLink }
+const startTimer = true
+
+export { user, siteTheme, gaId, viewHelpURLs, surveyLink, startTimer }

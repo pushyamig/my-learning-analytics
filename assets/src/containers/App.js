@@ -7,9 +7,11 @@ import Course from './Course'
 import WarningBanner from '../components/WarningBanner'
 import { Helmet } from 'react-helmet'
 
+import IdleTimer from '../components/IdleTimer'
+
 function App (props) {
   const location = useLocation()
-  const { user, gaId } = props
+  const { user, gaId, startTimer } = props
 
   if (!user.isLoggedIn) {
     if (user.loginURL === '') {
@@ -24,6 +26,7 @@ function App (props) {
     <>
       <Helmet titleTemplate='%s | My Learning Analytics' title='Courses' />
       <GoogleAnalyticsTracking gaId={gaId} />
+      <IdleTimer startTimer={startTimer}></IdleTimer>
       <Switch>
         <Route path='/' exact>
           <CourseList user={user} />
