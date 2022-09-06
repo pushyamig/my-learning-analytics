@@ -42,7 +42,7 @@ OUTLIER_BIN_OFFSET = 2
 # string for resource type
 RESOURCE_TYPE_STRING = "resource_type"
 
-BinningGrade = namedtuple('BinningGrade', ['value', 'index','binning_all'])
+BinningGrade = namedtuple('BinningGrade', ['value', 'index', 'binning_all'])
 
 
 def gpa_map(grade):
