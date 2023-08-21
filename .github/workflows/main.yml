@@ -19,5 +19,5 @@ jobs:
       - name: Run Docker
         run: |
           using: 'docker'
-          image: 'dockerfiles/Dockerfile'
+          image: 'Dockerfile'
       
