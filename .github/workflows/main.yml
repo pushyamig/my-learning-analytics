@@ -9,7 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Login to gihub Container Registry
+        uses: docker/login-actions@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Docker Image
-        run: docker build . --file Dockerfile 
+        #run: docker build . --file Dockerfile 
+        run: |
+          docker build . --tag ghcr.io/pushyamig/my-learning-analytics:latest
+          docker push ghcr.io/pushyamig/my-learning-analyticsLlatest
+        
    
       
