@@ -14,7 +14,7 @@ jobs:
         run: |
           docker build . --tag ghcr.io/pushyamig/my-learning-analytics:latest
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          docker push ghcr.io/pushyamig/my-learning-analyticsLlatest
+          docker push ghcr.io/pushyamig/my-learning-analytics:latest
         
    
       
