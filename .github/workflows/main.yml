@@ -6,6 +6,7 @@ on:
     branches: 
       - master
       - '20\d{2}\.\d{2}\.\d{2}'
+  workflow_dispatch:
   
 env:
   IMAGE_TAG: latest
