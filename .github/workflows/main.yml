@@ -5,7 +5,7 @@ on:
     # takes muliple branch names
     branches: 
       - test-import-iimage
-      - '[0-9][0-9][0-9][0-9].[0-9][0-9].*' # 2021.01.01
+      - '[0-9][0-9][0-9][0-9].[0-9][0-9].*' # 2021.01.x
   
 env:
   IMAGE_TAG: latest
