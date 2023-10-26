@@ -46,4 +46,20 @@ jobs:
       - name: Push Docker image to GitHub Container Registry
         run: |
           docker push ghcr.io/${{ env.REPO_URL }}:${{ env.IMAGE_TAG }}-${BRANCH_NAME}
+    
+  release: 
+     # Making sure that release only runs for tag pushes
+    if: startsWith(github.ref, 'refs/tags/v') && github.repository_owner == 'pushyami'
+    needs: build # This ensures the build job finishes successfully before starting this job
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Draft Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}    
       
