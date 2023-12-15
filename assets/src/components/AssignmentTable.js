@@ -33,7 +33,7 @@ const PREFIX = 'AssignmentTable'
 
 const classes = {
   root: `${PREFIX}-root`,
-  paper: `${PREFIX}-paper`,
+  messageWrapper: `${PREFIX}-messageWrapper`,
   container: `${PREFIX}-container`,
   sliderCell: `${PREFIX}-sliderCell`,
   goalGradeInput: `${PREFIX}-goalGradeInput`,
@@ -60,11 +60,6 @@ const Root = styled('div')((
   [`& .${classes.root}`]: {
     flexGrow: 1,
     padding: 8
-  },
-
-  [`& .${classes.paper}`]: {
-    padding: theme.spacing(2),
-    color: theme.palette.text.secondary
   },
 
   [`& .${classes.container}`]: {
@@ -140,6 +135,14 @@ const Root = styled('div')((
   [`& .${classes.filterButton}`]: {
     textTransform: 'none'
   }
+}))
+
+// separate styles for child of opened popover
+const StyledPopoverMessage = styled('div')(({ theme }) => ({
+  [`& .${classes.messageWrapper}`]: {
+    padding: theme.spacing(2),
+    color: theme.palette.text.secondary
+  },
 }))
 
 const headerHeight = 105
@@ -495,7 +498,6 @@ function AssignmentTable (props) {
                           />
                           <Popover
                             className={classes.popover}
-                            classes={{ paper: classes.paper }}
                             anchorEl={popoverEl.anchorEl}
                             open={popoverEl.popoverId === key}
                             onClose={clearPopoverEl}
@@ -511,7 +513,11 @@ function AssignmentTable (props) {
                             disableAutoFocus
                             disableEnforceFocus
                           >
-                            <PopupMessage a={a} assignmentGroups={assignmentGroups} />
+                            <StyledPopoverMessage>
+                              <div className={classes.messageWrapper}>
+                                <PopupMessage a={a} assignmentGroups={assignmentGroups} />
+                                </div>
+                              </StyledPopoverMessage>
                           </Popover>
                         </div>
                       </>
