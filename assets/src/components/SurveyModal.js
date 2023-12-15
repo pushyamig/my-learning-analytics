@@ -23,6 +23,14 @@ const Root = styled('div')((
     theme
   }
 ) => ({
+  [`& .${classes.surveyButton}`]: {
+    color: theme.palette.primary.main,
+    background: theme.palette.getContrastText(theme.palette.primary.main)
+  }
+}))
+
+// styling within the modal (root styling doesn't apply to portal elements)
+const StyledModalBody =  styled('div')(({ theme }) => ({
   [`& .${classes.modal}`]: {
     top: '10%',
     left: '50%',
@@ -62,11 +70,6 @@ const Root = styled('div')((
     width: '100%',
     height: '100%'
   },
-
-  [`& .${classes.surveyButton}`]: {
-    color: theme.palette.primary.main,
-    background: theme.palette.getContrastText(theme.palette.primary.main)
-  }
 }))
 
 export default function SurveyModal (props) {
@@ -117,7 +120,7 @@ export default function SurveyModal (props) {
         aria-labelledby='survey-modal-title'
         aria-describedby='survey-modal-description'
       >
-        {body}
+        <StyledModalBody>{body}</StyledModalBody>
       </Modal>
     </Root>
   )
