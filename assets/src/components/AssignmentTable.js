@@ -142,7 +142,7 @@ const StyledPopoverMessage = styled('div')(({ theme }) => ({
   [`& .${classes.messageWrapper}`]: {
     padding: theme.spacing(2),
     color: theme.palette.text.secondary
-  },
+  }
 }))
 
 const headerHeight = 105
@@ -407,8 +407,8 @@ function AssignmentTable (props) {
                       {
                         a.week
                           ? isPreviousWeekTheSame(a.week, key)
-                              ? ''
-                              : `Week ${a.week}`
+                            ? ''
+                            : `Week ${a.week}`
                           : 'No due date'
                       }
                     </TableCell>
@@ -421,8 +421,8 @@ function AssignmentTable (props) {
                       {
                         a.week
                           ? isPreviousDayTheSame(a.dueDateMonthDay, key)
-                              ? ''
-                              : a.dueDateMonthDay
+                            ? ''
+                            : a.dueDateMonthDay
                           : ''
                       }
                     </TableCell>
@@ -500,6 +500,9 @@ function AssignmentTable (props) {
                             className={classes.popover}
                             anchorEl={popoverEl.anchorEl}
                             open={popoverEl.popoverId === key}
+                            sx={{
+                              pointerEvents: 'none'
+                            }}
                             onClose={clearPopoverEl}
                             anchorOrigin={{
                               vertical: 'top',
@@ -516,8 +519,8 @@ function AssignmentTable (props) {
                             <StyledPopoverMessage>
                               <div className={classes.messageWrapper}>
                                 <PopupMessage a={a} assignmentGroups={assignmentGroups} />
-                                </div>
-                              </StyledPopoverMessage>
+                              </div>
+                            </StyledPopoverMessage>
                           </Popover>
                         </div>
                       </>
