@@ -18,9 +18,8 @@ const classes = {
   surveyButton: `${PREFIX}-surveyButton`
 }
 
-
 // styling within the modal (root styling doesn't apply to portal elements)
-const StyledModalBody =  styled('div')(({ theme }) => ({
+const StyledModalBody = styled('div')(({ theme }) => ({
   [`& .${classes.modal}`]: {
     top: '10%',
     left: '50%',
@@ -59,7 +58,7 @@ const StyledModalBody =  styled('div')(({ theme }) => ({
     right: 0,
     width: '100%',
     height: '100%'
-  },
+  }
 }))
 
 const ColoredButton = styled(Button)(({ theme }) => ({
@@ -67,8 +66,8 @@ const ColoredButton = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.main,
   '&:hover': {
     backgroundColor: '#D5D5D5'
-  },
-}));
+  }
+}))
 
 export default function SurveyModal (props) {
   const location = useLocation()
