@@ -95,7 +95,7 @@ export default function SurveyModal (props) {
   const body = (
     <div className={`${classes.paper} ${classes.modal}`}>
       <DialogTitle className={classes.dialogTitle}>
-        <Typography variant='h6' id='survey-modal-title'>{props.surveyLink.text}</Typography>
+        <span><Typography variant='h6' id='survey-modal-title'>{props.surveyLink.text}</Typography></span>
         <IconButton onClick={toggleOpen} size='large'>
           <CloseIcon />
         </IconButton>
