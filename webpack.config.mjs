@@ -1,12 +1,14 @@
-const path = require('path')
-const BundleTracker = require('webpack-bundle-tracker')
+import path from 'node:path'
+import BundleTracker from 'webpack-bundle-tracker'
+
+const projectDirectory = import.meta.dirname
 const isDevelopment = process.env.BABEL_ENV !== 'production'
 
-module.exports = {
+export default {
   mode: isDevelopment ? 'development' : 'production',
-  entry: path.join(__dirname, 'assets/src/index'),
+  entry: path.join(projectDirectory, 'assets/src/index'),
   output: {
-    path: path.join(__dirname, 'assets/dist'),
+    path: path.join(projectDirectory, 'assets/dist'),
     filename: '[name]-[fullhash].js'
   },
   watchOptions: { poll: true },
@@ -34,7 +36,7 @@ module.exports = {
   },
   plugins: [
     new BundleTracker({
-      path: __dirname,
+      path: projectDirectory,
       filename: 'webpack-stats.json'
     })
   ]

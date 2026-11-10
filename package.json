@@ -42,9 +42,9 @@
     ]
   },
   "scripts": {
-    "prod": "BABEL_ENV=production webpack --config webpack.config.js --mode production",
-    "build": "BABEL_ENV=development webpack --config webpack.config.js --mode development",
-    "watch": "BABEL_ENV=development webpack --config webpack.config.js --watch --mode development",
+    "prod": "BABEL_ENV=production webpack --config webpack.config.mjs --mode production",
+    "build": "BABEL_ENV=development webpack --config webpack.config.mjs --mode development",
+    "watch": "BABEL_ENV=development webpack --config webpack.config.mjs --watch --mode development",
     "test": "jest",
     "test:watch": "jest --watchAll",
     "update-snapshot": "jest --updateSnapshot"

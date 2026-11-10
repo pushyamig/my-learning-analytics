@@ -12,8 +12,8 @@ ARG PYTHON_VERSION=3.13
 FROM node:${NODE_VERSION}-${DEBIAN_VERSION}-slim AS node-webpack
 WORKDIR /usr/src/app
 
-# NOTE: package.json and webpack.config.js not likely to change between dev builds
-COPY package.json webpack.config.js package-lock.json /usr/src/app/
+# NOTE: package.json and webpack.config.mjs not likely to change between dev builds
+COPY package.json webpack.config.mjs package-lock.json /usr/src/app/
 RUN npm install
 
 # NOTE: assets/ likely to change between dev builds
