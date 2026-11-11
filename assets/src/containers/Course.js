@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { styled } from '@mui/material/styles'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useLocation } from 'react-router-dom'
 import DashboardAppBar from './DashboardAppBar'
 import SideDrawer from './SideDrawer'
 import GradeDistribution from './GradeDistribution'
@@ -12,7 +12,6 @@ import { isObjectEmpty } from '../util/object'
 import { useCourseInfo } from '../service/api'
 import WarningBanner from '../components/WarningBanner'
 import { CardMedia, Card } from '@mui/material'
-import { Helmet } from 'react-helmet'
 
 const PREFIX = 'Course'
 
@@ -42,8 +41,21 @@ const Root = styled('div')((
 
 function Course (props) {
   const { courseId, user } = props
+  const { pathname } = useLocation()
   const [loaded, error, courseInfo] = useCourseInfo(courseId)
   const [sideDrawerState, setSideDrawerState] = useState(false)
+  const route = pathname.split('/').filter(Boolean).pop()
+  const viewTitle = {
+    grades: 'Grade Distribution',
+    assignments: 'Assignment Planning',
+    resources: 'Resources Accessed'
+  }[route]
+  const pageTitle = viewTitle
+    ? `${viewTitle} | My Learning Analytics`
+    : courseInfo && courseInfo.name
+      ? `${courseInfo.name} | My Learning Analytics`
+      : 'My Learning Analytics'
+  const title = <title>{pageTitle}</title>
 
   const matchingCourses = user.relatedCourses.length > 0 ? user.relatedCourses.filter(c => c.course_id === props.courseId) : undefined
   const enrollmentTypes = matchingCourses && matchingCourses.length === 1 ? matchingCourses[0].enrollment_types : []
@@ -57,30 +69,48 @@ function Course (props) {
 
   if (error.message === '404' || error.message === 'Not Found') {
     return (
-      <WarningBanner>
-        Course {courseId} has not been set up in MyLA. Contact your instructor, who can enable the visualizations by clicking on MyLA in the course navigation.
-      </WarningBanner>
+      <>
+        {title}
+        <WarningBanner>
+          Course {courseId} has not been set up in MyLA. Contact your instructor, who can enable the visualizations by clicking on MyLA in the course navigation.
+        </WarningBanner>
+      </>
     )
   } else if (error.message === '403' || error.message === 'Forbidden') {
     return (
-      <WarningBanner>
-        You do not have access to course {courseId}.
-      </WarningBanner>
+      <>
+        {title}
+        <WarningBanner>
+          You do not have access to course {courseId}.
+        </WarningBanner>
+      </>
     )
   } else if (error) {
-    return (<WarningBanner />)
+    return (
+      <>
+        {title}
+        <WarningBanner />
+      </>
+    )
   }
 
-  if (loaded && isObjectEmpty(courseInfo)) return (<WarningBanner>My Learning Analytics is not enabled for this course.</WarningBanner>)
+  if (loaded && isObjectEmpty(courseInfo)) {
+    return (
+      <>
+        {title}
+        <WarningBanner>My Learning Analytics is not enabled for this course.</WarningBanner>
+      </>
+    )
+  }
 
   const notLoadedAltMessage = 'Mouse running on wheel with text "Course Data Being Processed, Try Back in 24 Hours"'
 
   return (
     <Root>
+      {title}
       {loaded
         ? (
           <>
-            <Helmet titleTemplate='%s | My Learning Analytics' title={courseInfo.name} />
             <DashboardAppBar
               onMenuBarClick={toggleDrawer}
               sideDrawerState={sideDrawerState}

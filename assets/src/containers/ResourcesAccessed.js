@@ -24,7 +24,6 @@ import useUserSetting from '../hooks/useUserSetting'
 import { isObjectEmpty } from '../util/object'
 import { handleError, defaultFetchOptions } from '../util/data'
 import { isTeacherOrAdmin } from '../util/roles'
-import { Helmet } from 'react-helmet'
 
 const PREFIX = 'ResourcesAccessed'
 
@@ -274,7 +273,6 @@ function ResourcesAccessed (props) {
   }
   return (
     <Root>
-      <Helmet title='Resources Accessed' />
       {disabled ? <AlertBanner>Preview Mode: This view is currently disabled for students.</AlertBanner> : undefined}
       <div className={classes.root}>
         <Grid container spacing={2}>

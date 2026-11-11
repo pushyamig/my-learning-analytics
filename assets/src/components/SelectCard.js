@@ -13,7 +13,6 @@ import { yellow, grey } from '@mui/material/colors'
 import clsx from 'clsx'
 import { defaultFetchOptions, handleError } from '../util/data'
 import { isTeacherOrAdmin } from '../util/roles'
-import PropTypes from 'prop-types'
 
 const PREFIX = 'SelectCard'
 
@@ -306,19 +305,5 @@ const SelectCard = props => {
     </Root>
   )
 }
-
-SelectCard.propTypes = {
-  cardData: PropTypes.shape({
-    path: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string,
-    image: PropTypes.string,
-    helpUrl: PropTypes.string
-  }).isRequired,
-  courseId: PropTypes.number.isRequired,
-  enrollmentTypes: PropTypes.array.isRequired
-}
-
-SelectCard.defaultProps = {}
 
 export default (SelectCard)
