@@ -12,6 +12,10 @@ To run the Jest test suite, execute the command `docker exec -it webpack_watcher
 
 To update snapshots, execute `docker exec -it webpack_watcher npm run-script update-snapshot`.
 
+The frontend package uses `type: module`. Webpack's configuration is ESM in `webpack.config.js`; Jest continues to use Babel-transformed tests and explicit CommonJS `.cjs` CSS/asset transformers. Transformer regression tests cover CSS imports and filename/SVG mocks. Run all frontend builds and Jest tests inside Docker.
+
+The app's webpack rule retains `javascript/auto` and extensionless resolution for bundled source so legacy MUI 5 CommonJS icon imports remain valid React components. The native Node ESM package/configuration is unaffected. Restart the frontend watcher after webpack configuration changes so it does not retain stale rules.
+
 ### LTI Browser Smoke Helper
 
 The standalone launcher needs Google Chrome and the `playwright` package available locally. With Playwright installed in the project, run:
@@ -22,7 +26,11 @@ node scripts/lti-browser-chrome.mjs
 
 Alternatively, set `PLAYWRIGHT_MODULE` to the absolute path of an isolated Playwright `index.mjs` before running the launcher. `CANVAS_TOOL_URL` and `MYLA_TOOL_ORIGIN` override the default Canvas test launch URL and ngrok origin when they change. Sign in and approve Okta directly in the opened browser, then enter `check` in the launcher terminal; enter `close` to end the session. Starting another instance of this launcher closes the previous launcher-controlled browser; other Chrome windows are unaffected. It does not save browser authentication state, so a replacement requires another sign-in.
 
+For the recorded student workflow, start from the course page as an authorized instructor/admin and enter `student`. Enter a student name (blank defaults to Student Bee), then enter `yes` to confirm impersonation. Any other confirmation cancels without navigating. The launcher follows People, the exact student link, Act as, Proceed, and `pu_myla_lti`, then waits for MyLA in its dynamically named frame. Enter `check` afterward to run the desktop checks as that student. This does not change grade goals or settings. Impersonation persists until you return to your original Canvas role manually or close the isolated browser; if launch fails, check whether impersonation is already active before retrying. Restart the launcher to load newly added commands; an already running process does not load command-loop changes automatically.
+
 The reusable `scripts/lti-browser-smoke.mjs` also exports `checkMylaViews` for an existing authenticated Playwright `page`:
+
+To demonstrate a new workflow, finish signing in first, then enter `record` in the launcher terminal. This opens Playwright Inspector; enable its Record control only after authentication. Repeat the workflow, stop recording, and resume the script. Inspector does not recover previous clicks, and this launcher does not automatically save generated code. Review generated steps for personal information before saving or sharing them. Do not record login, passwords, MFA, or export authentication state. For student impersonation, first return to the authorized instructor/admin role, select the agreed test student (default Student Bee), and demonstrate the People-to-MyLA launch. Do not automate impersonation until the user confirms the selected student and generated steps have been reviewed.
 
 ```js
 import { checkMylaViews } from './scripts/lti-browser-smoke.mjs'
@@ -36,7 +44,9 @@ The helper finds the tool frame by origin and checks navigation and loaded contr
 
 For optional heading-only screenshots when calling the helper, pass `screenshotDirectory: 'playwright-artifacts'`. The directory is gitignored. These screenshots do not capture the full page or establish a layout baseline; never capture course data without appropriate permission.
 
-Run the synthetic browser regression checks with Chrome and Playwright installed using `node --test scripts/__tests__/lti-browser-smoke.test.mjs`. The same `PLAYWRIGHT_MODULE` override works for an isolated installation. These fixtures contain no Canvas or course data.
+Each smoke run reloads the authenticated MyLA frame first so it tests the currently built bundle, not JavaScript retained from before an upgrade. Pass `reload: false` only for an intentional same-page diagnostic, not upgrade acceptance.
+
+Build the frontend in Docker first, then run browser regression checks with Chrome and Playwright installed using `node --test scripts/__tests__/lti-browser-smoke.test.mjs`. The same `PLAYWRIGHT_MODULE` override works for an isolated installation. One test loads the actual generated bundle and renders its MUI course UI with synthetic identity/course responses, catching module-interop failures that markup-only fixtures and Jest can miss. The fixtures contain no real Canvas or student data.
 
 ### Data Validation Testing
 

@@ -17,7 +17,10 @@ export default {
     rules: [
       {
         test: /\.(js|mjs|jsx|ts|tsx)$/,
+        include: path.join(projectDirectory, 'assets/src'),
         exclude: /node_modules/,
+        type: 'javascript/auto',
+        resolve: { fullySpecified: false },
         loader: 'babel-loader'
       },
       {
