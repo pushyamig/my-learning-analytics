@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { styled } from '@mui/material/styles'
 import Paper from '@mui/material/Paper'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/GridLegacy'
 import Typography from '@mui/material/Typography'
 import Checkbox from '@mui/material/Checkbox'
 import AlertBanner from '../components/AlertBanner'

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { styled } from '@mui/material/styles'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/GridLegacy'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import AlertBanner from '../components/AlertBanner'

@@ -1,5 +1,5 @@
 import React from 'react'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/GridLegacy'
 import SelectCard from '../components/SelectCard'
 import { isObjectEmpty, getObjectValues } from '../util/object'
 import WarningBanner from '../components/WarningBanner'

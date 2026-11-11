@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { styled } from '@mui/material/styles'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/GridLegacy'
 import Button from '@mui/material/Button'
 import StyledTextField from './StyledTextField'
 import debounce from 'lodash.debounce'

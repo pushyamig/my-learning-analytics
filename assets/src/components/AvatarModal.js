@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { styled } from '@mui/material/styles'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/GridLegacy'
 import Divider from '@mui/material/Divider'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
