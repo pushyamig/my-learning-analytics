@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { styled } from '@mui/material/styles'
 import AppBar from '@mui/material/AppBar'
 import Avatar from '@mui/material/Avatar'
-import Grid from '@mui/material/GridLegacy'
+import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import MuiLink from '@mui/material/Link'
 import Popover from '@mui/material/Popover'
@@ -106,10 +106,10 @@ function CourseList (props) {
               )
             : (
               <Grid container spacing={2}>
-                <Grid item xs={12} />
+                <Grid size={{ xs: 12 }} />
                 {
                   user.relatedCourses.map((course, key) => (
-                    <Grid item xs={12} sm={6} lg={4} key={key}>
+                    <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={key}>
                       <CourseListCard path={`/courses/${course.course_id}`} courseName={course.course_name} />
                     </Grid>
                   ))

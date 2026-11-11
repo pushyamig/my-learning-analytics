@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { styled } from '@mui/material/styles'
 import Paper from '@mui/material/Paper'
-import Grid from '@mui/material/GridLegacy'
+import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Checkbox from '@mui/material/Checkbox'
 import AlertBanner from '../components/AlertBanner'
@@ -115,10 +115,10 @@ function GradeDistribution (props) {
 
     return (
       <Grid container>
-        <Grid item xs={12} lg={2}>
+        <Grid size={{ xs: 12, lg: 2 }}>
           <Table className={classes.table} noBorder tableData={tableRows} />
         </Grid>
-        <Grid item xs={12} lg={10}>
+        <Grid size={{ xs: 12, lg: 10 }}>
           {gradeCheckbox}
           <Histogram
             data={grades}
@@ -149,7 +149,7 @@ function GradeDistribution (props) {
       {disabled ? <AlertBanner>Preview Mode: This view is currently disabled for students.</AlertBanner> : undefined}
       <div className={classes.root}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Paper className={classes.paper}>
               <ViewHeader>Grade Distribution</ViewHeader>
               {gradeContent}

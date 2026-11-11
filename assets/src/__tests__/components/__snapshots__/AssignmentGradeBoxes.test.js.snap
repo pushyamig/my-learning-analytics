@@ -2,7 +2,7 @@
 
 exports[`renders correctly 1`] = `
 <div
-  className="MuiGridLegacy-root MuiGridLegacy-item css-cnw6ps-MuiGridLegacy-root"
+  className="MuiGrid-root MuiGrid-direction-xs-row css-ojk58u-MuiGrid-root"
 >
   <div
     className="MuiFormControl-root MuiFormControl-marginNormal MuiTextField-root AssignmentGoalInput-goalGradeInput css-a8kv0n-MuiFormControl-root-MuiTextField-root"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { styled } from '@mui/material/styles'
-import Grid from '@mui/material/GridLegacy'
+import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import StyledTextField from './StyledTextField'
 import debounce from 'lodash.debounce'
@@ -49,7 +49,7 @@ function AssignmentGoalInput (props) {
   }, [goalGrade])
 
   return (
-    <StyledGrid item>
+    <StyledGrid>
       <StyledTextField
         error={goalGradeInternal > 100 || mathWarning || goalGradeInternal > maxPossibleGrade}
         id='minimum-goal'

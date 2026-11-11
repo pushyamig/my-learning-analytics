@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { styled } from '@mui/material/styles'
-import Grid from '@mui/material/GridLegacy'
+import Grid from '@mui/material/Grid'
 import Divider from '@mui/material/Divider'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
@@ -133,12 +133,12 @@ function AvatarModal (props) {
   return (
     <Root className={classes.root}>
       <Grid container>
-        <Grid item xs={4}>
+        <Grid size={{ xs: 4 }}>
           <Avatar className={classes.avatar}>
             {user.initials}
           </Avatar>
         </Grid>
-        <Grid item xs={8} container direction='column'>
+        <Grid container direction='column' size={{ xs: 8 }}>
           <Typography className={classes.typography}>
             Signed in as
           </Typography>
@@ -150,7 +150,7 @@ function AvatarModal (props) {
             {user.displayName}
           </Typography>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <List>
             <Divider />
             <Link style={{ textDecoration: 'none' }} href={helpURL} target='_blank' rel='noopener noreferrer'>

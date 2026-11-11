@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import InfoIcon from '@mui/icons-material/Info'
 import SaveIcon from '@mui/icons-material/Save'
 import { Link } from 'react-router-dom'
-import Grid from '@mui/material/GridLegacy'
+import Grid from '@mui/material/Grid'
 import { yellow, grey } from '@mui/material/colors'
 import clsx from 'clsx'
 import { defaultFetchOptions, handleError } from '../util/data'
@@ -222,7 +222,7 @@ const SelectCard = props => {
     const cardContent = (
       <CardContent className={classes.content}>
         <Grid container className={classes.titleArea}>
-          <Grid item xs={10}>
+          <Grid size={{ xs: 10 }}>
             <Typography gutterBottom variant='h5' component='h2' className={classes.title}>
               {cardData.title}
             </Typography>

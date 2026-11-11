@@ -47,7 +47,7 @@ function UserSettingSnackbar (props) {
       }}
       open={savedSnackbarOpen}
       autoHideDuration={snackbarDuration}
-      TransitionComponent={SlideTransition}
+      slots={{ transition: SlideTransition }}
       transitionDuration={{ exit: 400, enter: 400 }}
       onClose={() => setSavedSnackbarOpen(false)}
       message={<span>{snackbarMessage}</span>}
