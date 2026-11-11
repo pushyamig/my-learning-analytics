@@ -5,7 +5,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import './index.css'
 import App from './containers/App'
 import client from './service/client'
-import { ApolloProvider } from '@apollo/client'
+import { ApolloProvider } from '@apollo/client/react'
 import { user, siteTheme, gaId } from './globals'
 // import * as serviceWorker from './serviceWorker'
 

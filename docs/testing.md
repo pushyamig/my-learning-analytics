@@ -26,6 +26,40 @@ node scripts/lti-browser-chrome.mjs
 
 Alternatively, set `PLAYWRIGHT_MODULE` to the absolute path of an isolated Playwright `index.mjs` before running the launcher. `CANVAS_TOOL_URL` and `MYLA_TOOL_ORIGIN` override the default Canvas test launch URL and ngrok origin when they change. Sign in and approve Okta directly in the opened browser, then enter `check` in the launcher terminal; enter `close` to end the session. Starting another instance of this launcher closes the previous launcher-controlled browser; other Chrome windows are unaffected. It does not save browser authentication state, so a replacement requires another sign-in.
 
+#### Standalone launcher: step-by-step
+
+This is the full, repeatable sequence for launching a standalone Chrome (outside any editor), completing the Canvas/Okta login, and verifying both GraphQL channels live. Each new session needs a fresh manual sign-in — the launcher intentionally does not persist authentication state.
+
+1. **One-time: isolated Playwright install** (keeps the repo's `node_modules` and `package.json` untouched, which matters during dependency upgrades):
+
+    ```sh
+    mkdir -p ~/.cache/myla-isolated-playwright
+    cd ~/.cache/myla-isolated-playwright && npm init -y && npm install playwright
+    ```
+
+    The launcher uses the system Google Chrome (`channel: 'chrome'`), so no `npx playwright install` browser download is needed. Point `PLAYWRIGHT_MODULE` at the ESM entry `index.mjs`, **not** `index.js`: the CommonJS entry that `require.resolve('playwright')` returns does not expose the `chromium` named export under dynamic `import()`.
+
+2. **Confirm preconditions**: the Docker app is up (`http://localhost:5001`) and the ngrok tunnel to it is current. If the ngrok origin differs from the launcher default, export `MYLA_TOOL_ORIGIN` (and `CANVAS_TOOL_URL` if the Canvas link changed) before launching.
+
+3. **Start the launcher** from the repo root:
+
+    ```sh
+    export PLAYWRIGHT_MODULE="$HOME/.cache/myla-isolated-playwright/node_modules/playwright/index.mjs"
+    node scripts/lti-browser-chrome.mjs
+    ```
+
+    A standalone Chrome window opens to the Canvas test tool link and redirects to `U-M Canvas Login DEV`.
+
+4. **Sign in**: complete U-M Login + Okta directly in that window, then launch `pu_myla_lti` in the test course so MyLA loads. Never enter credentials, MFA, or tokens in the terminal or chat.
+
+5. **Read-only check** (Apollo `useQuery` path): type `check` in the launcher terminal. It prints a `data`/`empty` result per desktop view, e.g. `desktop: Assignment Planning: data`.
+
+6. **Live GraphQL write check** (Apollo `useMutation` path): in the MyLA **Assignment Planning** view, change **My Minimum Goal (%)** and confirm the **"Setting saved successfully!"** snackbar, then reload the tool and confirm the value persisted. Persistence proves the `/graphql` mutation reached Django with a valid `X-CSRFToken` (a 403 fails silently with no persistence). This changes only the current user's own setting, not real grades; `check` itself stays read-only. Restore the prior value manually afterward if it matters.
+
+7. **Close**: type `close` to end the session and shut the browser.
+
+When an agent runs the launcher on your behalf it feeds these same commands to the process's stdin (e.g. through a FIFO); when running it yourself, just type them in the terminal.
+
 For the recorded student workflow, start from the course page as an authorized instructor/admin and enter `student`. Enter a student name (blank defaults to Student Bee), then enter `yes` to confirm impersonation. Any other confirmation cancels without navigating. The launcher follows People, the exact student link, Act as, Proceed, and `pu_myla_lti`, then waits for MyLA in its dynamically named frame. Enter `check` afterward to run the desktop checks as that student. This does not change grade goals or settings. Impersonation persists until you return to your original Canvas role manually or close the isolated browser; if launch fails, check whether impersonation is already active before retrying. Restart the launcher to load newly added commands; an already running process does not load command-loop changes automatically.
 
 The reusable `scripts/lti-browser-smoke.mjs` also exports `checkMylaViews` for an existing authenticated Playwright `page`:
